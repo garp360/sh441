@@ -1,0 +1,13 @@
+<div>
+<div ng-show="!isAuth">Events Not logged in!</div>
+<div ng-show="isAuth">
+	<div class="well">
+		<div class="list-group">
+		  <a ng-repeat="event in events | date" href="#" class="list-group-item">
+		  	<span class="badge">{{event.participants.length}} players</span>
+		    {{event.name}}
+		  </a>
+		</div>
+	</div>
+</div>
+</div>

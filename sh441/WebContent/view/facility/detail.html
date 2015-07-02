@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>RoundKeeper by hb</title>
+</head>
+<body>
+	<div ng-show="!initialized">
+		<div>Loading club data...</div>
+	</div>
+	<div ng-show="initialized">
+		<div ng-show="error">{{errorMessage}}</div>
+		<div>
+			<input type="button" value="Edit" ng-click="edit()" />
+			<input type="button" value="Import" ng-click="import()" />
+			<table class="hb roundkeeper scoring">
+				<tr>
+					<th>ID:</th>
+					<td colspan="3">{{club.id}}</td>
+				</tr>
+				<tr>
+					<th>Name:</th>
+					<td colspan="3">{{club.name}}</td>
+				</tr>
+				<tr>
+					<th>Courses:</th>
+					<td colspan="3"><div ng-repeat="course in club.courses | orderBy : 'name'"><a ui-sref="course-detail( { 'courseId': course.id } )">{{course.name}}</a></div></td>
+				</tr>
+				<tr>
+					<th colspan="4">Members</th>
+				</tr>
+				<tr ng-repeat="member in club.members | orderBy : 'fullName'">
+					<td>{{$index + 1}}</td>
+					<td>{{member.status}}</td>
+					<td><a ui-sref="member-detail( { 'memberId': member.id, 'clubId': club.id } )">{{member.lastName}}, {{member.firstName}}</a></td>
+					<td>{{member.joined}}</td>
+				</tr>
+				<tr>
+					<th colspan="4"><a ui-sref="group-list( { 'clubId': club.id } )">Groups</a></th>
+				</tr>
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Contact Person</th>
+					<th>Email</th>
+				</tr>
+				<tr ng-repeat="group in club.groups | orderBy : 'name'">
+					<td>{{$index + 1}}</td>
+					<td><a href="#/groups/group/{{group.id}}">{{group.name}}</a></td>
+					<td>{{group.contact.name}}</td>
+					<td><div ng-repeat="email in group.contact.email | orderBy : 'email'">{{email}}</div></td>
+				</tr>
+				<tr>
+					<td colspan="4" align="right"><a href="#/clubs">Different Club</a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
