@@ -2,6 +2,18 @@ angular.module('factory.module').factory('AuthFactory', function( $q, $log, $fir
 	var factory = angular.extend(BaseFactory, {});
 	var authRef = $firebaseAuth(factory.AUTH_REF);
 
+	factory.getUser = function () {
+		return __getLoggedInUser();
+	};
+
+	factory.getAuth = function() {
+		return __getAuth();
+	};
+	
+	factory.logoff = function() {
+		return authRef.$unauth();
+	};
+	
 	factory.register = function( registrationForm ) {
 		var deferred = $q.defer();
 		var _credentials = {};
@@ -46,19 +58,14 @@ angular.module('factory.module').factory('AuthFactory', function( $q, $log, $fir
 		}, function (error) {
 			deferred.reject(error);
 		}).then(function(authData) {
-			$log.debug("factory.login authData" + authData);
-			return $firebaseObject(factory.USER_REF.child(authData.uid)).$loaded();
-		}, function (error) {
-			deferred.reject(error);
+			return __getLoggedInUser();
 		}).then(function(userData) {
 			deferred.resolve(userData);
-		}, function (error) {
-			deferred.reject(error);
 		});
 
 		return deferred.promise;
 	};
-
+	
 	function __validateLogin(loginForm) {
 		var deferred = $q.defer();
 		if(loginForm.username && loginForm.password) {
@@ -87,7 +94,32 @@ angular.module('factory.module').factory('AuthFactory', function( $q, $log, $fir
 			password: form.password
 		};
 	}
+	
+	function __getLoggedInUser() {
+		var deferred = $q.defer();
+
+		__getAuth().then(function(authData) {
+			return authData;
+		}).then(function(authData) {
+			if(authData) {
+				return $firebaseObject(factory.USER_REF.child(authData.uid)).$loaded();
+			} else {
+				return null;
+			}
+		}).then(function(userData) {
+			deferred.resolve(userData);
+		});
+		
+		return deferred.promise;
+	}
+
+	function __getAuth() {
+		var deferred = $q.defer();
+		deferred.resolve(authRef.$getAuth());
+		return deferred.promise;
+	}
 
 	return factory;
 
 });
+

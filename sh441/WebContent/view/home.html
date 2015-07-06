@@ -1,5 +1,5 @@
 <div>
-<div ui-view="profile"></div>
-<div ui-view="facility"></div>
-<div ui-view="events"></div>
+	<div ng-show="!isAuth" ui-view="profile"></div>
+	<div ng-show="isAuth" ui-view="facility"></div>
+	<div ng-show="isAuth" ui-view="events"></div>
 </div>

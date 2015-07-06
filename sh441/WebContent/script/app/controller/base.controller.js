@@ -1,5 +1,5 @@
-angular.module('controller.module').controller("BaseController",['$scope', function($scope){
-	
+angular.module('controller.module').controller("BaseController",['$scope', '$log', '$firebaseAuth', 'AuthFactory', function($scope, $log, $firebaseAuth, AuthFactory){
+
 	this.PATRONAGE_TYPE = [
 		  {name: 'Private', value : "PRIVATE", order : 2},                  
 		  {name: 'Public', value : "Public", order : 0},
@@ -7,27 +7,22 @@ angular.module('controller.module').controller("BaseController",['$scope', funct
 	];
 	
 	$scope.formatNameLF = function(user) {
-		return user.lastName + ", " + user.firstName;
+		var name = "";
+		if(user) {
+			name = user.lastName + ", " + user.firstName;
+		}
+		return name;
 	};
 	
 	$scope.formatNameFL = function(user) {
-		return user.firstName + " " + user.lastName;
+		var name = "";
+		if(user) {
+			name = user.firstName + " " + user.lastName;
+		}
+		return name;
 	};
 
 	$scope.formatDate = function(date) {
 		return moment(date).format("dddd, MMMM Do YYYY, h:mm:ss A") + " (UTC " + moment(date).utcOffset() + ")";
 	};
-	
-	this.formatNameLF = function(user) {
-		return user.lastName + ", " + user.firstName;
-	};
-	
-	this.formatNameFL = function(user) {
-		return user.firstName + " " + user.lastName;
-	};
-
-	this.formatDate = function(date) {
-		return moment(date).format("dddd, MMMM Do YYYY, h:mm:ss A") + " (UTC " + moment(date).utcOffset() + ")";
-	};
-	
 }]);

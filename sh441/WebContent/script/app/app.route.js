@@ -6,74 +6,49 @@ angular.module('hb.sh441')
         .state('home', {   
         	url:'/',
         	resolve : {
-    			user : function(AuthFactory) {
-    				return AuthFactory.login({
-    					username : "garth.pidcock@gmail.com",
-    					password: "tnplh"
-    				});
-    			},
-    			isAuth : function(user) {
-    				return user != null && user.$id != null;
-    			},
-    			memberInfo : function(user, MemberFactory) {
-    				var memberIdArray = [];
-    				if(user.membership) {
-    					memberIdArray.push(user.membership);
-    				}
-    				return MemberFactory.getMembershipData(memberIdArray);
-    			},
-    			facilityInfo : function(memberInfo, FacilityFactory) {
-    				return FacilityFactory.getMembershipFacilityData(memberInfo);
-    			},
-    			memberships : function(memberInfo, facilityInfo) {
-    				var memberships = [];
-    				angular.forEach(memberInfo, function(member){
-    					angular.forEach(facilityInfo, function(facility){
-    						if(facility.$id === member.facility) {
-    							memberships.push({
-    								member: member,
-    								facility: facility
-    							});
-    						}
-    					});
-    				});
-    				return memberships;
+        		user : function(AuthFactory) {
+    				return AuthFactory.getUser();
     			}
-    		},
+        	},
         	views: {
         		'' : {	
-        			templateUrl: 'view/home.html'
+        			templateUrl: 'view/home.html',
+        			controller: function($scope, $controller, $log) {
+        				angular.extend(this, $controller('AuthController', {$scope: $scope}));
+		    		}
         		},
         		'profile@home' : {
 		    		templateUrl: 'view/partial/member-profile.html',
-		    		controller: function($scope, $controller, $log, isAuth, user, memberships) {
-		    			angular.extend(this, $controller('BaseController', {$scope: $scope}));
-		    			$log.debug("isAuth = [" + isAuth + "]");
-		    			$scope.isAuth = isAuth;
+		    		controller: function($scope, $controller, $log, $state, AuthFactory, user) {
+		    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
 		    			$scope.user = user;
-		    			$scope.memberships = memberships;
+		    			$scope.loginForm = {};
+		    			
+		    			$scope.signIn = function(loginForm) {
+		    				$log.debug("email = " + loginForm.username);
+		    				AuthFactory.login({username: loginForm.username, password: loginForm.password}).then(function(user){
+		    					$scope.user = user;
+		    				});
+		    			};
+		    			
+		    			$scope.register = function(loginForm) {
+		    				$log.debug("email = " + loginForm.username);
+		    				$state.go("registration", {'email': loginForm.username});
+		    			};
 		    		}
         		},
         		'facility@home' : {
 		    		templateUrl: 'view/partial/member-facility.html',
-		    		controller: function($scope, $controller, facility, isAuth, memberships) {
-		    			angular.extend(this, $controller('FacilityController', {$scope: $scope}));
-		    			$scope.facility = facility;
-		    			$scope.isAuth = isAuth;
-		    			$scope.membershipInfo = memberships;
-		    		},
-		    		resolve : {
-		    			facility : function(FacilityFactory) {
-		    				return FacilityFactory.findAll();
-		    			}
+		    		controller: function($scope, $controller, $log) {
+		    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
+		    			$scope.membershipInfo = {};
 		    		}
         		},
         		'events@home' : {
 		    		templateUrl: 'view/partial/member-events.html',
-		    		controller: function($scope, $controller, events, isAuth) {
-		    			angular.extend(this, $controller('BaseController', {$scope: $scope}));
+		    		controller: function($scope, $controller, $log, events) {
+		    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
 		    			$scope.events = events;
-		    			$scope.isAuth = isAuth;
 		    		},
 		    		resolve : {
 		    			events : function() {
@@ -81,6 +56,28 @@ angular.module('hb.sh441')
 		    			}
 		    		}
         		}
+        	}
+        })
+        .state('registration', {
+        	url:'/user/register/:email',
+    		templateUrl: 'view/registration-form.html',
+    		controller: function($scope, $controller, $log, AuthFactory, registrationForm) {
+    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
+    			$scope.registrationForm = registrationForm;
+    			$scope.registrationError = {};
+    			
+    			$scope.register = function() {
+    				AuthFactory.register(registrationForm).then(function(user) {
+    					$state.go("home");
+    				}, function(error) {
+    					$log.debug(error);
+    				});
+    			};
+    		},
+        	resolve : {
+        		registrationForm : function($stateParams){
+        	          return {username: $stateParams.email};
+        	    }
         	}
         })
         .state('facility-create', {
@@ -99,4 +96,4 @@ angular.module('hb.sh441')
     			};
     		}
         });
-}]);
+}]); 

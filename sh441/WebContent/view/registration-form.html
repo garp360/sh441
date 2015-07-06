@@ -1,0 +1,32 @@
+<div class="well">
+	<form class="form-inline">
+		<div class="form-group">
+			<label class="sr-only" for="exampleInputEmail3">Email
+				address</label> <input ng-model="registrationForm.username" type="email" class="form-control"
+				id="exampleInputEmail3" placeholder="Email">
+		</div>
+		<div class="form-group">
+			<label class="sr-only" for="exampleInputPassword3">Password</label>
+			<input ng-model="registrationForm.password" type="password" class="form-control"
+				id="exampleInputPassword3" placeholder="Password">
+		</div>
+		<div class="form-group">
+			<label class="sr-only" for="exampleInputPassword4">Confirm Password</label>
+			<input ng-model="registrationForm.confpassword" type="password" class="form-control"
+				id="exampleInputPassword4" placeholder="Confirm Password">
+		</div>
+		<div class="form-group">
+			<label class="sr-only" for="firstNameField">First Name</label>
+			<input ng-model="registrationForm.firstName" type="text" class="form-control"
+				id="firstNameField" placeholder="First Name">
+		</div>
+		<div class="form-group">
+			<label class="sr-only" for="lastNameField">Last Name</label>
+			<input ng-model="registrationForm.lastName" type="text" class="form-control"
+				id="lastNameField" placeholder="Last Name">
+		</div>
+		<br/><br/>
+		<button type="submit" class="btn btn-primary form-control" style="margin-bottom:10px;" ng-click="register()">Register</button>
+	</form>
+</div>
+
