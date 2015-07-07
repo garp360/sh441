@@ -14,9 +14,10 @@ angular.module('controller.module').controller("AuthController",['$scope', '$log
 			$scope.user = {};
 			$scope.loginForm = {};
 			$scope.isAuth = false;
+			$scope.user = {};
 		}
 	});
-	
+
 	$scope.signIn = function(loginForm) {
 		$log.debug("email = " + loginForm.username);
 		AuthFactory.login({username: loginForm.username, password: loginForm.password}).then(function(user){
@@ -28,7 +29,7 @@ angular.module('controller.module').controller("AuthController",['$scope', '$log
 		$log.debug("email = " + loginForm.username);
 		$state.go("registration", {'email': loginForm.username});
 	};
-	
+
 	$scope.logoff = function() {
 		AuthFactory.logoff();
 	};
