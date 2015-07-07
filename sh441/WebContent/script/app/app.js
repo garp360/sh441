@@ -1,4 +1,4 @@
-var app = angular.module('hb.sh441', ['ui.router', 'ngMaterial', 'firebase', 'controller.module', 'factory.module']);
+var app = angular.module('hb.sh441', ['ui.router', 'ngMaterial', 'ngMessages', 'firebase', 'controller.module', 'factory.module']);
 app.config(function($mdThemingProvider) {
 	
 	var hs441PrimaryPalette = $mdThemingProvider.extendPalette('blue', {
