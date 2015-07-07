@@ -14,10 +14,11 @@ angular.module('controller.module').controller("AuthController",['$scope', '$log
 		} else {
 			console.log("Logged out");
 			$scope.isAuth = false;
+			$scope.user = {};
 		}
 	});
 	
-	$scope.signOut = function() {
+	$scope.logoff = function() {
 		AuthFactory.logoff();
 		$scope.isAuth = false;
 		$scope.user = {};

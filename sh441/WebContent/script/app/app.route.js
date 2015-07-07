@@ -61,7 +61,7 @@ angular.module('hb.sh441')
         .state('registration', {
         	url:'/user/register/:email',
     		templateUrl: 'view/registration-form.html',
-    		controller: function($scope, $controller, $log, AuthFactory, registrationForm) {
+    		controller: function($scope, $controller, $log, $state, AuthFactory, registrationForm) {
     			angular.extend(this, $controller('AuthController', {$scope: $scope}));
     			$scope.registrationForm = registrationForm;
     			$scope.registrationError = {};

@@ -6,5 +6,13 @@ angular.module('factory.module').factory('BaseFactory', function($q, $log) {
 	factory.MEMBER_REF = new Firebase("https://sh441.firebaseio.com/member");
 	factory.USER_REF = new Firebase("https://sh441.firebaseio.com/user");
 	
+	factory.getValue = function(value, defaultValue) {
+		var result = defaultValue;
+		if(value) {
+			result = value; 
+		} 
+		return result;
+	};
+	
 	return factory;
 });
