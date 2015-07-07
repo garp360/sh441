@@ -19,23 +19,7 @@ angular.module('hb.sh441')
         		},
         		'profile@home' : {
 		    		templateUrl: 'view/partial/member-profile.html',
-		    		controller: function($scope, $controller, $log, $state, AuthFactory, user) {
-		    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
-		    			$scope.user = user;
-		    			$scope.loginForm = {};
-		    			
-		    			$scope.signIn = function(loginForm) {
-		    				$log.debug("email = " + loginForm.username);
-		    				AuthFactory.login({username: loginForm.username, password: loginForm.password}).then(function(user){
-		    					$scope.user = user;
-		    				});
-		    			};
-		    			
-		    			$scope.register = function(loginForm) {
-		    				$log.debug("email = " + loginForm.username);
-		    				$state.go("registration", {'email': loginForm.username});
-		    			};
-		    		}
+		    		controller: 'AuthController'
         		},
         		'facility@home' : {
 		    		templateUrl: 'view/partial/member-facility.html',
@@ -61,7 +45,7 @@ angular.module('hb.sh441')
         .state('registration', {
         	url:'/user/register/:email',
     		templateUrl: 'view/registration-form.html',
-    		controller: function($scope, $controller, $log, AuthFactory, registrationForm) {
+    		controller: function($scope, $controller, $log, $state, AuthFactory, registrationForm) {
     			angular.extend(this, $controller('AuthController', {$scope: $scope}));
     			$scope.registrationForm = registrationForm;
     			$scope.registrationError = {};
