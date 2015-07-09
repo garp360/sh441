@@ -4,7 +4,7 @@
     angular
     	.module('factory.module')
     	.factory('AuthFactory', AuthFactory);
-    
+
     	AuthFactory.$inject = ['$q', '$log', '$firebaseAuth', '$firebaseArray', '$firebaseObject', 'BaseFactory'];
     
     	function AuthFactory($q, $log, $firebaseAuth, $firebaseArray, $firebaseObject, BaseFactory) {
