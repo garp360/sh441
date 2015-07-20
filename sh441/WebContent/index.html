@@ -9,6 +9,7 @@
 	<script type='text/javascript' src="vendor/angular-js/1.4.1/angular-animate.js"></script>
 	<script type='text/javascript' src="vendor/angular-js/1.4.1/angular-aria.js"></script>
 	<script type='text/javascript' src="vendor/angular-js/1.4.1/angular-messages.js"></script>
+	<script type='text/javascript' src="vendor/angular-js/1.4.1/angular-sanitize.js"></script>
 	<script type='text/javascript' src="vendor/angular-js/1.4.1/angular-touch.js"></script>
 	<script type='text/javascript' src="vendor/angular-formly/6.16.1/angular-formly.js"></script>
 	<script type='text/javascript' src="vendor/angular-formly-bootstrap/4.4.0/angular-formly-bootstrap.js"></script>
@@ -28,6 +29,7 @@
 	<script type='text/javascript' src="script/app/controller/auth.controller.js"></script>
 	<script type='text/javascript' src="script/app/controller/app.controller.js"></script>
 	<script type='text/javascript' src="script/app/controller/facility/facility-controller.js"></script>
+	<script type='text/javascript' src="script/app/controller/event/event.controller.js"></script>
 	<script type='text/javascript' src="script/app/app.js"></script>
 	<script type='text/javascript' src="script/app/app.route.js"></script>
 	<link rel="stylesheet" href="vendor/angular-material/0.9.4/angular-material.css">
@@ -35,6 +37,8 @@
 	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/1.1.34/css/materialdesignicons.min.css">
 	<link rel="stylesheet" href="vendor/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="vendor/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="vendor/angular-bootstrap-datetimepicker/0.3.13/datetimepicker.css"/>
+	<link rel="stylesheet" href="style/app.css"/>
 </head>
 <body layout="column" ng-controller="AppCtrl">
     <md-toolbar layout="row">
@@ -51,7 +55,9 @@
           <ul class="list-group">
 			  <li ng-show="isAuth" class="list-group-item" ng-click="signOut('left')">Sign Out</li>
 			  <li ng-show="isAuth" class="list-group-item" ng-click="signOut('left')">My Profile</li>
-			  <li ng-show="isAuth" class="list-group-item" ng-click="signOut('left')">Create Event</li>
+			  <li ng-show="isAuth" class="list-group-item" ng-click="createEvent('left')">Create Event
+			  	<span class="glyphicon glyphicon-menu-right pull-right" aria-hidden="true"></span>
+			  </li>
 			</ul>
         </md-sidenav>
         <div layout="column" flex id="content">
@@ -61,5 +67,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
     <script src="vendor/jquery/jquery.min.2.1.1.js"></script>
     <script src="vendor/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type='text/javascript' src="vendor/angular-bootstrap-datetimepicker/0.3.13/datetimepicker.js"></script>
+	<script type='text/javascript' src="vendor/angular-number-picker/angular-number-picker.js"></script>
   </body>
 </html>

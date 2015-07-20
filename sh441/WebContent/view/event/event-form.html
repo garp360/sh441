@@ -1,0 +1,45 @@
+<div class="well">
+	<form name="frmEvent" class="form-horizontal">
+		<div class="form-group" ng-class="{ 'has-error': frmEvent.username.$touched && frmEvent.username.$invalid }">
+		  	<label class="sr-only" for="usernameField">course</label>
+		    <div class="col-xs-12">
+			    <div class="input-group hb-fill">
+					<select name="usernameField" class="form-control" ng-model="event.course" ng-options="course.name for course in courses | orderBy:'order'" required > </select>
+			    </div>
+		    </div>
+		</div>
+		<div class="form-group" ng-class="{ 'has-error': frmEvent.username.$touched && frmEvent.username.$invalid }">
+			<label class="sr-only" for="eventDateField">start date</label>
+			<div class="col-xs-12">
+				<div class="dropdown">
+					<a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#">
+						<div class="input-group">
+							<input name="eventDate" type="text" class="form-control" data-ng-model="displayedDate"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+						</div>
+					</a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+						<datetimepicker data-ng-model="event.date" data-on-set-time="onTimeSet(newDate, oldDate)" data-datetimepicker-config="{ dropdownSelector: '#dropdown1', minuteStep : 1 }"></datetimepicker>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-xs-12">
+				<label for="teeTimesField">Number of Tee Times:
+					<select name="teeTimesField" class="form-control" ng-model="totalTeeTimes" ng-options="teeTime in teeTimes" required > </select>
+				</label>
+		  	</div>
+	  	</div>
+		<div class="form-group">
+			<div class="col-xs-12">
+				<button type="submit" class="btn btn-primary form-control" ng-click="create()">Create Event</button>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-xs-12">
+				<a class="btn btn-default form-control" ui-sref="home" role="button">Cancel</a>
+			</div>
+		</div>
+	</form>
+</div>
+

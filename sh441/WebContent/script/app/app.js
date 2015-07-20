@@ -2,7 +2,7 @@
     'use strict';
     
    angular
-   .module('hb.sh441', ['ui.router', 'ngMaterial', 'ngMessages', 'formly', 'formlyBootstrap', 'firebase', 'controller.module', 'factory.module'])
+   .module('hb.sh441', ['ui.router', 'ui.bootstrap.datetimepicker', 'angularNumberPicker', 'ngMaterial', 'ngMessages', 'formly', 'formlyBootstrap', 'firebase', 'controller.module', 'factory.module'])
    .config(function($mdThemingProvider) {
 	
 		var hs441PrimaryPalette = $mdThemingProvider.extendPalette('blue', {

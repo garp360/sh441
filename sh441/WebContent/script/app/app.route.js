@@ -39,7 +39,10 @@
 			    		},
 			    		resolve : {
 			    			events : function() {
-			    				return [{name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]}];
+			    				return [{name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]},
+			    				        {name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]},
+			    				        {name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]}
+			    				        ];
 			    			}
 			    		}
 	        		}
@@ -67,21 +70,28 @@
 	        	    }
 	        	}
 	        })
-	        .state('facility-create', {
-	        	url:'/facility/new',
-	    		templateUrl: 'view/facility/create.html',
-	    		controller: function($scope, $controller) {
-	    			angular.extend(this, $controller('FacilityController', {$scope: $scope}));
-	    			$scope.facility = {};
-	    			$scope.clear = function() {
-	    				$scope.facility = {};
-	    			};
-	    			$scope.save = function() {
-	    				var facilities = [];
-	    				facilities.push($scope.facility);
-	    				this.saveOrUpdate(facilities);
-	    			};
-	    		}
-	        });
+	        .state('event-create', {
+	        	url:'/event/new',
+	    		templateUrl: 'view/event/event-form.html',
+	    		controller: 'EventController',
+	        	resolve : {
+	        		courses : function() {
+	        			return [ {name: 'Cimarrone', patronage : 'SEMI-PRIVATE', order : 2, teeTimeInterval: 8, teeTimeStart: 7},                  
+	        			 		 {name: 'St Johns', patronage : "SEMI-PRIVATE", order : 1, teeTimeInterval: 10, teeTimeStart: 7},
+	        			 		 {name: 'South Hampton', patronage : "SEMI-PRIVATE", order : 0, teeTimeInterval: 9, teeTimeStart: 7}
+	        			];
+	        		},
+	        		event : function(courses){
+	        			return {
+	        	        	name: 'Pidcock Group',
+	        	        	date: new Date(),
+	        	        	course: courses[2],
+	        	        	teeTimes: []
+        				};
+	        	    }
+	        	}
+	    	});
+	       
 	}]); 
 })();
+
