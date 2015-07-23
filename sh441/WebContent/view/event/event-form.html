@@ -24,12 +24,28 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-xs-12">
-				<label for="teeTimesField">Number of Tee Times:
-					<select name="teeTimesField" class="form-control" ng-model="totalTeeTimes" ng-options="teeTime in teeTimes" required > </select>
-				</label>
-		  	</div>
-	  	</div>
+		  	<label class="sr-only" for="teeTimeSelectorField">selectedTeeTime</label>
+		    <div class="col-xs-3">
+			    <div class="input-group hb-fill">
+					<select name="teeTimeSelectorField" class="form-control" ng-model="eventTeeTime" ng-options="teeTime.formatted for teeTime in teeTimes | orderBy:'order'" > </select>
+			    </div>
+		    </div>
+		    <div class="col-xs-1">
+			    <div class="input-group">
+					<input class="btn btn-default" type="button" value="Add Tee Time">
+			    </div>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <div class="col-xs-1">
+			  	<label for="scheduledTeeTimes">Tee Times</label>
+			</div>
+		    <div class="col-xs-11">
+			    <div class="input-group hb-fill">
+					<label for="scheduledTeeTimes" ng-model="event.teeTimes"></label>
+			    </div>
+		    </div>
+		</div>
 		<div class="form-group">
 			<div class="col-xs-12">
 				<button type="submit" class="btn btn-primary form-control" ng-click="create()">Create Event</button>

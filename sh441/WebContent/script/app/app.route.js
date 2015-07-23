@@ -76,18 +76,51 @@
 	    		controller: 'EventController',
 	        	resolve : {
 	        		courses : function() {
-	        			return [ {name: 'Cimarrone', patronage : 'SEMI-PRIVATE', order : 2, teeTimeInterval: 8, teeTimeStart: 7},                  
-	        			 		 {name: 'St Johns', patronage : "SEMI-PRIVATE", order : 1, teeTimeInterval: 10, teeTimeStart: 7},
-	        			 		 {name: 'South Hampton', patronage : "SEMI-PRIVATE", order : 0, teeTimeInterval: 9, teeTimeStart: 7}
+	        			return [ {id: 'crs1', name: 'Cimarrone', patronage : 'SEMI-PRIVATE', order : 2, teeTimeInterval: 8, teeTimeStart: 7},                  
+	        			 		 {id: 'crs2', name: 'St Johns', patronage : "SEMI-PRIVATE", order : 1, teeTimeInterval: 10, teeTimeStart: 7},
+	        			 		 {id: 'crs3', name: 'South Hampton', patronage : "SEMI-PRIVATE", order : 0, teeTimeInterval: 9, teeTimeStart: 7}
 	        			];
 	        		},
 	        		event : function(courses){
 	        			return {
 	        	        	name: 'Pidcock Group',
-	        	        	date: new Date(),
+	        	        	date: {
+	        	        		formatted: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).format('ddd, MMM Do, YYYY'),
+	        	        		utc: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).toDate()
+	        	        	},
 	        	        	course: courses[2],
 	        	        	teeTimes: []
         				};
+        			},
+	        	    teeTimes : function (courses) {
+	        	    	var times = {};
+	        	    	angular.forEach(courses, function(course){
+	        	    		times[course.id] = [];
+	        	    		
+	        	    		var teeTimeArray = [];
+	        	    		var firstTime =  moment().hour(course.teeTimeStart).minute(0).second(0);
+	        	    		var firstTeeTime = {
+	        	    			order: 0,
+	        	    			formatted : firstTime.format('hh:mm A'),
+	        	    			utc : firstTime.toDate()
+	        	    		};
+	        	    		
+	        	    		teeTimeArray.push(firstTeeTime);
+	        	    		for(var i=0; i<70; i++) {
+	        	    			var priorTeeTime = moment(teeTimeArray[i].utc);
+	        	    			var nextTime = priorTeeTime.add(course.teeTimeInterval, 'm');
+	        	    			var nextTeeTime = {
+	        	    				order: i+1,
+    	        	    			formatted : nextTime.format('hh:mm A'),
+    	        	    			utc : nextTime.toDate()
+	    	        	    	};
+	        	    			teeTimeArray.push(nextTeeTime);	        	    			
+	        	    		}
+	        	    		
+	        	    		times[course.id] = teeTimeArray;
+	        	    	});
+	        	    	
+	        	    	return times;
 	        	    }
 	        	}
 	    	});
