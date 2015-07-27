@@ -4,7 +4,7 @@
 		  	<label class="sr-only" for="usernameField">course</label>
 		    <div class="col-xs-12">
 			    <div class="input-group hb-fill">
-					<select name="usernameField" class="form-control" ng-model="event.course" ng-options="course.name for course in courses | orderBy:'order'" required > </select>
+					<select name="usernameField" class="form-control" ng-model="selectedCourse" ng-change="changeCourse(selectedCourse)" ng-options="course.name for course in courses | orderBy:'order'" required > </select>
 			    </div>
 		    </div>
 		</div>
@@ -26,21 +26,22 @@
 		<div class="form-group">
 		  	<label class="sr-only" for="teeTimeSelectorField">selectedTeeTime</label>
 		    <div class="col-md-2 col-xs-6">
-					<select name="teeTimeSelectorField" class="form-control" ng-model="eventTeeTime" ng-options="teeTime.formatted for teeTime in event.course.availableTeeTimes | orderBy:'order'" > </select>
+				<select name="teeTimeSelectorField" class="form-control" ng-model="selectedTeeTime" ng-change="changeTeeTime(selectedTeeTime)" ng-options="teeTime.formatted for teeTime in event.course.availableTeeTimes | orderBy:'order'" > </select>
 		    </div>
 		    <div class="col-xs-6">
-
-					<input class="btn btn-default" type="button" value="Add Tee Time">
-			
+				<input class="btn btn-default" type="button" value="Add Tee Time" ng-click="addTeeTime(selectedTeeTime)">
 		    </div>
 		</div>
 		<div class="form-group">
 		    <div class="col-xs-12">
 			  	<label for="scheduledTeeTimes">Scheduled Tee Times</label>
+			  	<input ng-show="!editMode" class="btn btn-xs btn-default" type="button" value="Edit" ng-click="toggleEditMode(true)">
+			  	<input ng-show="editMode" class="btn btn-xs btn-default" type="button" value="Done" ng-click="toggleEditMode(false)">
+			  	<input class="btn btn-xs btn-default" type="button" value="Clear" ng-click="clearTeeTimes(event.teeTimes)">
 			</div>
 		    <div class="col-xs-12">
-			    <div class="input-group hb-fill">
-					<label class="teeTimeList" for="scheduledTeeTimes">{{displayTeeTimes(event)}}</label>
+			    <div class="input-group hb-fill" ng-repeat="teeTime.formatted for teeTime in event.teeTimes | orderBy:'order'" ">			    	
+					<label class="teeTimeList" for="scheduledTeeTimes">{{teeTime}}</label>
 			    </div>
 		    </div>
 		</div>

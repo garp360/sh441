@@ -114,7 +114,7 @@
 	        	        		utc: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).toDate()
 	        	        	},
 	        	        	course: courses[2],
-	        	        	teeTimes: courses[2].availableTeeTimes.splice(4,4)
+	        	        	teeTimes: courses[2].availableTeeTimes.slice(4,8)
         				};
         			},
 	        	}
