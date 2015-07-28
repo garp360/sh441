@@ -13,15 +13,15 @@
 			$scope.courses = courses;
 			$scope.selectedCourse = event.course;
 			$scope.selectedTeeTime = event.course.availableTeeTimes[0];
-			$scope.teeTimesDisplay = displayTeeTimes();
 			
-				
 			$scope.onTimeSet = onTimeSet;
-			$scope.displayTeeTimes = displayTeeTimes;
+			$scope.displayTeeTime = displayTeeTime;
 			$scope.changeCourse = changeCourse;
 			$scope.clearTeeTimes = clearTeeTimes;
 			$scope.toggleEditMode = toggleEditMode;
 			$scope.addTeeTime = addTeeTime;
+			$scope.teeTimeEditorEnabled = teeTimeEditorEnabled;
+
 			
 			function onTimeSet(newDate, oldDate) {
 				$scope.event.date = {
@@ -30,15 +30,8 @@
 	        	};
 			};
 			
-			function displayTeeTimes() {
-				var teeTimes = "";
-				angular.forEach($scope.event.teeTimes, function(teeTime) {
-					if(teeTimes.length > 0) {
-						teeTimes = teeTimes + ", ";
-					}
-					teeTimes = teeTimes + moment(teeTime.utc).format('h:mm a');
-				});
-				return teeTimes;
+			function displayTeeTime(teeTime) {
+				return moment(teeTime.utc).format('h:mm a');;
 			};
 			
 			function changeCourse(selectedCourse) {
@@ -65,12 +58,15 @@
 						});						
 					} 
 					$scope.event.teeTimes = newTeeTimes;
-					$scope.teeTimesDisplay = displayTeeTimes();
 				}
 			};
 			
 			function toggleEditMode(editModeState) {
 				$scope.editMode = editModeState;
+			};
+
+			function teeTimeEditorEnabled() {
+				return $scope.event.teeTimes.length > 0;
 			};
 			
 			function addTeeTime(selectedTeeTime) {
@@ -88,7 +84,6 @@
 						return a.order - b.order;
 					});
 					$scope.event.teeTimes = teeTimes;
-					$scope.teeTimesDisplay = displayTeeTimes();
 				}
 				$scope.selectedTeeTime = event.course.availableTeeTimes[selectedTeeTime.order + 1];
 			}; 

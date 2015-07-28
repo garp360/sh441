@@ -35,14 +35,19 @@
 		<div class="form-group">
 		    <div class="col-xs-12">
 			  	<label for="scheduledTeeTimes">Scheduled Tee Times</label>
-			  	<input ng-show="!editMode" class="btn btn-xs btn-default" type="button" value="Edit" ng-click="toggleEditMode(true)">
-			  	<input ng-show="editMode" class="btn btn-xs btn-default" type="button" value="Done" ng-click="toggleEditMode(false)">
-			  	<input class="btn btn-xs btn-default" type="button" value="Clear" ng-click="clearTeeTimes(event.teeTimes)">
+			  	<input ng-show="!editMode" ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Edit" ng-click="toggleEditMode(true)">
+			  	<input ng-show="editMode" ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Done" ng-click="toggleEditMode(false)">
+			  	<input ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Clear" ng-click="clearTeeTimes(event.teeTimes)">
 			</div>
 		    <div class="col-xs-12">
-			    <div class="input-group hb-fill" ng-repeat="teeTime.formatted for teeTime in event.teeTimes | orderBy:'order'" ">			    	
-					<label class="teeTimeList" for="scheduledTeeTimes">{{teeTime}}</label>
+			    <div ng-show="!teeTimeEditorEnabled()" class="input-group hb-fill">			    	
+					<label class="teeTimeList">None</label>
 			    </div>
+			    <div class="container-fluid">
+					<div ng-show="teeTimeEditorEnabled()" class="row" ng-repeat="teeTime in event.teeTimes | orderBy:'order'">			    	
+						<div class="teeTimeList col-xs-1">{{displayTeeTime(teeTime)}}</div>
+			    	</div>
+				</div>
 		    </div>
 		</div>
 		<div class="form-group">
