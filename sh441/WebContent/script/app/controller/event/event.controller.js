@@ -4,9 +4,9 @@
     angular
     	.module('controller.module')
     	.controller('EventController', EventController);
-    	EventController.$inject = ['$scope', '$log', '$controller', '$state', '$firebaseAuth', 'courses', 'event'];
+    	EventController.$inject = ['$scope', '$log', '$controller', '$state', '$firebaseAuth', 'EventFactory', 'courses', 'event'];
     	
-    	function EventController ($scope, $log, $controller, $state, $firebaseAuth, courses, event) {
+    	function EventController ($scope, $log, $controller, $state, $firebaseAuth, EventFactory, courses, event) {
 			angular.extend(this, $controller('AuthController', {$scope: $scope}));
 			$scope.editMode = false;
 			$scope.event = event;
@@ -17,11 +17,12 @@
 			$scope.onTimeSet = onTimeSet;
 			$scope.displayTeeTime = displayTeeTime;
 			$scope.changeCourse = changeCourse;
-			$scope.clearTeeTimes = clearTeeTimes;
 			$scope.toggleEditMode = toggleEditMode;
 			$scope.addTeeTime = addTeeTime;
+			$scope.removeTeeTime = removeTeeTime;
+			$scope.removeAllTeeTimes = removeAllTeeTimes;
 			$scope.teeTimeEditorEnabled = teeTimeEditorEnabled;
-
+			$scope.create = createEvent;
 			
 			function onTimeSet(newDate, oldDate) {
 				$scope.event.date = {
@@ -30,22 +31,40 @@
 	        	};
 			};
 			
-			function displayTeeTime(teeTime) {
-				return moment(teeTime.utc).format('h:mm a');;
+			function displayTeeTime(teeTime, allTeeTimes) {
+				var teeTimeToDisplay = moment(teeTime.utc).format('h:mm a');
+				if(allTeeTimes[allTeeTimes.length-1].order != teeTime.order) {
+					teeTimeToDisplay += ", ";
+				}
+				return teeTimeToDisplay;
 			};
 			
 			function changeCourse(selectedCourse) {
 				$scope.event.course = selectedCourse;
-				$scope.event.teeTimes = [];
+				removeAllTeeTimes($scope.event.teeTimes);
 				$scope.selectedCourse = selectedCourse;
 				$scope.selectedTeeTime = selectedCourse.availableTeeTimes[0];
 			};
 			
-			function clearTeeTimes(teeTimes) {
+			function removeTeeTime(teeTime) {
+				var teeTimes = [];
+				teeTimes.push(teeTime);
+				removeAllTeeTimes(teeTimes);
+			}
+			
+			function createEvent() {
+				EventFactory.createEvent($scope.event).then(function(event){
+					$scope.event = event;
+				}, function(){
+					$log.debug("Create Event Failed");
+				});
+			}
+			
+			function removeAllTeeTimes(teeTimes) {
 				if(teeTimes.length <= $scope.event.teeTimes.length) {
 					var newTeeTimes = [];
 					if(teeTimes.length < $scope.event.teeTimes.length) {
-						angular.forEach($scope.event.teeTimes.length, function(existingTeeTime){
+						angular.forEach($scope.event.teeTimes, function(existingTeeTime){
 							var deleteTeeTime = false;
 							angular.forEach(teeTimes, function(teeTimeToDelete){
 								if(!deleteTeeTime && existingTeeTime.order === teeTimeToDelete.order) {
@@ -57,6 +76,9 @@
 							}
 						});						
 					} 
+					if(newTeeTimes.length === 0) {
+						$scope.editMode = false;
+					}
 					$scope.event.teeTimes = newTeeTimes;
 				}
 			};

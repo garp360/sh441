@@ -32,6 +32,8 @@ select {
 	font-size: .9em;
 	font-style: italic;
 	font-weight: normal;
+	display: inline-block;
+	padding-right: 3px;
 }
 
 .dropdown-menu {

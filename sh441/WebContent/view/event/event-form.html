@@ -37,14 +37,15 @@
 			  	<label for="scheduledTeeTimes">Scheduled Tee Times</label>
 			  	<input ng-show="!editMode" ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Edit" ng-click="toggleEditMode(true)">
 			  	<input ng-show="editMode" ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Done" ng-click="toggleEditMode(false)">
-			  	<input ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Clear" ng-click="clearTeeTimes(event.teeTimes)">
+			  	<input ng-disabled="!teeTimeEditorEnabled()" class="btn btn-xs btn-default" type="button" value="Clear" ng-click="removeAllTeeTimes(event.teeTimes)">
 			</div>
 		    <div class="col-xs-12">
-			    <div ng-show="!teeTimeEditorEnabled()" class="input-group hb-fill">			    	
-					<label class="teeTimeList">None</label>
-			    </div>
-			    <div ng-show="teeTimeEditorEnabled()" class="input-group hb-fill" ng-repeat="teeTime in event.teeTimes | orderBy:'order'">			    	
-					<label class="teeTimeList">{{displayTeeTime(teeTime)}}</label>
+ 				<div class="teeTimeList" ng-show="!teeTimeEditorEnabled()" class="input-group hb-fill">None</div>
+			    <div class="teeTimeList" ng-repeat="teeTime in event.teeTimes | orderBy:'order'">
+			    	<span ng-show="!editMode">{{displayTeeTime(teeTime, event.teeTimes)}}</span>
+			    	<button ng-show="editMode" type="button" class="btn btn-default btn-xs" ng-click="removeTeeTime(teeTime)">
+	  					 {{teeTime.formatted}} <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
 			    </div>
 		    </div>
 		</div>
