@@ -25,9 +25,12 @@
 			$scope.create = createEvent;
 			
 			function onTimeSet(newDate, oldDate) {
+				
+				var eventDate = moment(newDate).hour(courses[2].teeTimeStart).minute(0).second(0);
+				
 				$scope.event.date = {
-	        		formatted: (moment(newDate).hour(courses[2].teeTimeStart).minute(0).second(0)).format('ddd, MMM Do, YYYY'),
-	        		utc: (moment(newDate).hour(courses[2].teeTimeStart).minute(0).second(0)).toDate()
+	        		formatted: eventDate.format('ddd, MMM Do, YYYY'),
+	        		utc: eventDate.toISOString()
 	        	};
 			};
 			
@@ -53,6 +56,7 @@
 			}
 			
 			function createEvent() {
+				var eventToCreate = angular.toJson($scope.event);
 				EventFactory.createEvent($scope.event).then(function(event){
 					$scope.event = event;
 				}, function(){

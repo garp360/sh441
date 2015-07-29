@@ -88,7 +88,7 @@
 	        	    		var firstTeeTime = {
 	        	    			order: 0,
 	        	    			formatted : firstTime.format('hh:mm A'),
-	        	    			utc : firstTime.toDate()
+	        	    			utc : firstTime.toISOString()
 	        	    		};
 	        	    		
 	        	    		course.availableTeeTimes.push(firstTeeTime);
@@ -98,7 +98,7 @@
 	        	    			var nextTeeTime = {
 	        	    				order: i+1,
     	        	    			formatted : nextTime.format('hh:mm A'),
-    	        	    			utc : nextTime.toDate()
+    	        	    			utc : nextTime.toISOString()
 	    	        	    	};
 	        	    			course.availableTeeTimes.push(nextTeeTime);	        	    			
 	        	    		}
@@ -107,11 +107,13 @@
 	        	    	return courses;
 	        	    },
 	        		event : function(courses){
+	        			var today = moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0);
+	        			
 	        			return {
 	        	        	name: 'Pidcock Group',
 	        	        	date: {
-	        	        		formatted: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).format('ddd, MMM Do, YYYY'),
-	        	        		utc: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).toDate()
+	        	        		formatted: today.format('ddd, MMM Do, YYYY'),
+	        	        		utc: today.toISOString()
 	        	        	},
 	        	        	course: courses[2],
 	        	        	teeTimes: courses[2].availableTeeTimes.slice(4,8)

@@ -15,7 +15,19 @@
 			factory.createEvent = create;
 			
 			function create(event) {
-				return events.$add(event);
+				var deferred = $q.defer();
+				
+				events.$add(event).then(function (event) {
+					return $firebaseObject(factory.EVENT_REF.child(event.key));
+				}, function (error) {
+					deferred.reject(error);
+				}).then(function(event){
+					deferred.resolve(event);
+				}, function (error) {
+					deferred.reject(error);
+				});
+		
+				return deferred.promise;
 			};
 
 			return factory;
