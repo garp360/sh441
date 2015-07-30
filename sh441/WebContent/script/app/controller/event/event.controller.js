@@ -12,11 +12,12 @@
 			$scope.event = event;
 			$scope.courses = courses;
 			$scope.selectedCourse = event.course;
-			$scope.selectedTeeTime = event.course.availableTeeTimes[0];
+			$scope.selectedTeeTime = $scope.event.course.availableTeeTimes[0];
 			
-			$scope.onTimeSet = onTimeSet;
-			$scope.displayTeeTime = displayTeeTime;
-			$scope.changeCourse = changeCourse;
+			$scope.onChangeCourse = onChangeCourse;
+			$scope.onChangeEventDate = onChangeEventDate;
+			
+			$scope.displayTeeTime = displayTeeTimeInCommaDelimitedList;
 			$scope.toggleEditMode = toggleEditMode;
 			$scope.addTeeTime = addTeeTime;
 			$scope.removeTeeTime = removeTeeTime;
@@ -24,9 +25,16 @@
 			$scope.teeTimeEditorEnabled = teeTimeEditorEnabled;
 			$scope.create = createEvent;
 			
-			function onTimeSet(newDate, oldDate) {
+			function onChangeCourse(selectedCourse) {
+				// set newly selected course in event.
+				$scope.event.course = selectedCourse;
 				
-				var eventDate = moment(newDate).hour(courses[2].teeTimeStart).minute(0).second(0);
+				removeAllTeeTimes();
+			};
+			
+			function onChangeEventDate(selectedDate, oldDate) {
+				// set date to 12am for the selected day
+				var eventDate = moment(selectedDate).hour(0).minute(0).second(0);
 				
 				$scope.event.date = {
 	        		formatted: eventDate.format('ddd, MMM Do, YYYY'),
@@ -34,57 +42,49 @@
 	        	};
 			};
 			
-			function displayTeeTime(teeTime, allTeeTimes) {
+			function addTeeTime(selectedTeeTime) {
+				var scheduledTeeTimes = angular.copy($scope.event.teeTimes);
+				if(!teeTimeIsScheduled(selectedTeeTime)) {
+					scheduledTeeTimes.push(selectedTeeTime);
+					scheduledTeeTimes.sort(function(a,b){
+						return a.order - b.order;
+					});
+					$scope.event.teeTimes = scheduledTeeTimes;
+				}
+				$scope.selectedTeeTime = $scope.event.course.availableTeeTimes[selectedTeeTime.order + 1];
+			}; 
+			
+			
+			function teeTimeIsScheduled(selectedTeeTime) {
+				var valid = false;
+				angular.forEach($scope.event.teeTimes, function(teeTime) {
+					if(!valid && teeTime.order === selectedTeeTime.order) {
+						valid = true;
+					}
+				});
+				
+				$log.debug("teeTimeIsScheduled = " + valid);
+				return valid;
+			}
+			
+			/*
+			 * teeTime: teeTime 
+			 * 		{	    order	: 0, 
+			 * 			formatted 	: moment().format('hh:mm A'),
+			 * 			      utc 	: moment().toISOString()
+			 * 		};
+			 * allTeeTimes: array of teeTimes
+			 * 
+			 * Function determines whether to display with comma delimiter or without
+			 */
+			function displayTeeTimeInCommaDelimitedList(teeTime, allTeeTimes) {
 				var teeTimeToDisplay = moment(teeTime.utc).format('h:mm a');
+				
 				if(allTeeTimes[allTeeTimes.length-1].order != teeTime.order) {
 					teeTimeToDisplay += ", ";
 				}
+				
 				return teeTimeToDisplay;
-			};
-			
-			function changeCourse(selectedCourse) {
-				$scope.event.course = selectedCourse;
-				removeAllTeeTimes($scope.event.teeTimes);
-				$scope.selectedCourse = selectedCourse;
-				$scope.selectedTeeTime = selectedCourse.availableTeeTimes[0];
-			};
-			
-			function removeTeeTime(teeTime) {
-				var teeTimes = [];
-				teeTimes.push(teeTime);
-				removeAllTeeTimes(teeTimes);
-			}
-			
-			function createEvent() {
-				var eventToCreate = angular.toJson($scope.event);
-				EventFactory.createEvent($scope.event).then(function(event){
-					$scope.event = event;
-				}, function(){
-					$log.debug("Create Event Failed");
-				});
-			}
-			
-			function removeAllTeeTimes(teeTimes) {
-				if(teeTimes.length <= $scope.event.teeTimes.length) {
-					var newTeeTimes = [];
-					if(teeTimes.length < $scope.event.teeTimes.length) {
-						angular.forEach($scope.event.teeTimes, function(existingTeeTime){
-							var deleteTeeTime = false;
-							angular.forEach(teeTimes, function(teeTimeToDelete){
-								if(!deleteTeeTime && existingTeeTime.order === teeTimeToDelete.order) {
-									deleteTeeTime = true;
-								}
-							});
-							if(!deleteTeeTime) {
-								newTeeTimes.push(existingTeeTime);
-							}
-						});						
-					} 
-					if(newTeeTimes.length === 0) {
-						$scope.editMode = false;
-					}
-					$scope.event.teeTimes = newTeeTimes;
-				}
 			};
 			
 			function toggleEditMode(editModeState) {
@@ -95,50 +95,52 @@
 				return $scope.event.teeTimes.length > 0;
 			};
 			
-			function addTeeTime(selectedTeeTime) {
-				var teeTimes = angular.copy($scope.event.teeTimes);
-				var valid = true;
-				angular.forEach(teeTimes, function(teeTime) {
-					if(teeTime.order === selectedTeeTime.order) {
-						valid = false;
-					}
-				});
-				
-				if(valid) {
-					teeTimes.push(selectedTeeTime);
-					teeTimes.sort(function(a,b){
+			
+			function removeTeeTime(teeTime) {
+				if($scope.event.teeTimes.length <= 1) {
+					removeAllTeeTimes();
+				} else {
+					var scheduledTeeTimes = [];
+					angular.forEach($scope.event.teeTimes, function(scheduledTeeTime) {
+						if(teeTime.order != scheduledTeeTime.order) {
+							scheduledTeeTimes.push(scheduledTeeTime);
+						}
+					});
+					
+					scheduledTeeTimes.sort(function(a,b){
 						return a.order - b.order;
 					});
-					$scope.event.teeTimes = teeTimes;
+					$scope.event.teeTimes = scheduledTeeTimes;
 				}
-				$scope.selectedTeeTime = event.course.availableTeeTimes[selectedTeeTime.order + 1];
-			}; 
-//			
-//			
-//			$scope.updateTeeTimes = function() {
+			}
+			
+			function removeAllTeeTimes() {
+				// clear the events existing tee times
+				$scope.event.teeTimes = [];
 
-//    			var scheduled = [teeTimes[5], teeTimes[6], teeTimes[7], teeTimes[8]];
-//    			var available = teeTimes;
-//    			available.splice(5,4);
-//    			return {
-//    	        	name: 'Pidcock Group',
-//    	        	date: {
-//    	        		formatted: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).format('ddd, MMM Do, YYYY'),
-//    	        		utc: (moment(new Date()).hour(courses[2].teeTimeStart).minute(0).second(0)).toDate()
-//    	        	},
-//    	        	course: courses[2],
-//    	        	availableTeeTimes: available,
-//    	        	teeTimes: scheduled
-
-//				var startingTeeTime = $scope.event.date;
-//				var teeTimes = [];
-//				teeTimes.push(startingTeeTime);
-//				for(var i=0; i<val-1; i++) {
-//					var nextTeeTime = moment(teeTimes[i]).add($scope.course.teeTimeInterval, 'm');
-//					teeTimes.push(nextTeeTime);
-//				}
-//				
-//				$scope.event.teeTimes = teeTimes;
-//			};
+				// toggle tee time edit mode OFF
+				$scope.editMode = false;
+				
+				// default to the first tee time of the selected course
+				$scope.selectedTeeTime = $scope.event.course.availableTeeTimes[0];
+			};
+			
+			function createEvent() {
+				var eventToCreate = angular.toJson($scope.event);
+				$log.debug(eventToCreate);
+				EventFactory.createEvent(eventToCreate).then(function(event){
+					var obj = event.$value;
+					$log.debug(obj);
+					$scope.event = obj;
+				}, function(){
+					$log.debug("Create Event Failed");
+				});
+			}
+			
+			
+			
+			
+			
+			
 		};
 })();

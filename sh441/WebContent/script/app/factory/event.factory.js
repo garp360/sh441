@@ -14,11 +14,12 @@
 		    
 			factory.createEvent = create;
 			
-			function create(event) {
+			function create(eventToCreate) {
 				var deferred = $q.defer();
 				
-				events.$add(event).then(function (event) {
-					return $firebaseObject(factory.EVENT_REF.child(event.key));
+				events.$add(eventToCreate).then(function (ref) {
+					var obj = $firebaseObject(eventRef.child(ref.key()));
+					return obj.$loaded();
 				}, function (error) {
 					deferred.reject(error);
 				}).then(function(event){
