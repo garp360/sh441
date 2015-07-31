@@ -8,11 +8,12 @@
     	
     	function EventController ($scope, $log, $controller, $state, $firebaseAuth, EventFactory, courses, event) {
 			angular.extend(this, $controller('AuthController', {$scope: $scope}));
-			$scope.editMode = false;
 			$scope.event = event;
 			$scope.courses = courses;
 			$scope.selectedCourse = event.course;
 			$scope.selectedTeeTime = $scope.event.course.availableTeeTimes[0];
+			$scope.editMode = false;
+			$scope.isNew = true;
 			
 			$scope.onChangeCourse = onChangeCourse;
 			$scope.onChangeEventDate = onChangeEventDate;
@@ -24,6 +25,8 @@
 			$scope.removeAllTeeTimes = removeAllTeeTimes;
 			$scope.teeTimeEditorEnabled = teeTimeEditorEnabled;
 			$scope.create = createEvent;
+			$scope.update = updateEvent;
+
 			
 			function onChangeCourse(selectedCourse) {
 				// set newly selected course in event.
@@ -94,8 +97,7 @@
 			function teeTimeEditorEnabled() {
 				return $scope.event.teeTimes.length > 0;
 			};
-			
-			
+
 			function removeTeeTime(teeTime) {
 				if($scope.event.teeTimes.length <= 1) {
 					removeAllTeeTimes();
@@ -126,18 +128,26 @@
 			};
 			
 			function createEvent() {
-				var eventToCreate = angular.toJson($scope.event);
-				$log.debug(eventToCreate);
-				EventFactory.createEvent(eventToCreate).then(function(event){
-					var obj = event.$value;
-					$log.debug(obj);
-					$scope.event = obj;
+				EventFactory.createEvent($scope.event).then(function(event){
+					$scope.isNew = false;
+					$scope.event = event;
+					$scope.selectedTeeTime = $scope.event.course.availableTeeTimes[0];
 				}, function(){
+					$scope.isNew = true;
 					$log.debug("Create Event Failed");
 				});
 			}
 			
-			
+			function updateEvent() {
+				EventFactory.updateEvent($scope.event).then(function(event){
+					$scope.isNew = false;
+					$scope.event = event;
+					$scope.selectedTeeTime = $scope.event.course.availableTeeTimes[0];
+				}, function(){
+					$scope.isNew = true;
+					$log.debug("Update Event Failed");
+				});
+			}
 			
 			
 			

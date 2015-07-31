@@ -14,7 +14,10 @@
 			factory.MEMBER_REF = new Firebase("https://sh441.firebaseio.com/member");
 			factory.USER_REF = new Firebase("https://sh441.firebaseio.com/user");
 			
-			factory.getValue = function(value, defaultValue) {
+			factory.getValue = getValue;
+			factory.createGuid = createGuid;
+			
+			function getValue(value, defaultValue) {
 				var result = defaultValue;
 				if(value) {
 					result = value; 
@@ -22,6 +25,18 @@
 				return result;
 			};
 			
+			function createGuid()
+			{
+			    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+			        return v.toString(16);
+			    });
+			}
+
+			
+			
 			return factory;
+			
+			
     	};
 })();

@@ -50,8 +50,11 @@
 		    </div>
 		</div>
 		<div class="form-group">
-			<div class="col-xs-12">
-				<button type="submit" class="btn btn-primary form-control" ng-click="create()">Create Event</button>
+			<div ng-show="isNew" class="col-xs-12">
+				<button class="btn btn-primary form-control" ng-click="create()">Create Event</button>
+			</div>
+			<div ng-show="!isNew" class="col-xs-12">
+				<button class="btn btn-primary form-control" ng-click="update()">Update Event</button>
 			</div>
 		</div>
 		<div class="form-group">

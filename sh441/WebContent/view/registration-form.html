@@ -13,7 +13,7 @@
 	  <div class="form-group" ng-class="{ 'has-error': frmRegistration.password.$touched && frmRegistration.password.$invalid }">
 	    <label class="sr-only" for="passwordField">Password</label>
 	    <div class="col-xs-12">
-	      <input ng-model="registrationForm.password" type="password" class="form-control" placeholder="Password" id="passwordField" name="password" ng-minlength="6" required>
+	      <input ng-model="registrationForm.password" type="password" class="form-control" placeholder="Password" id="passwordField" name="password" ng-minlength="5" required>
 	   	  <div ng-messages="frmRegistration.password.$error" ng-if="frmRegistration.password.$touched">
 		        <p ng-message="required">Your password is required.</p>
 		        <p ng-message="minlength">Too short!</p>
@@ -23,7 +23,7 @@
 	  <div class="form-group" ng-class="{ 'has-error': frmRegistration.confPassword.$touched && frmRegistration.confPassword.$invalid }">
 	    <label class="sr-only" for="confPasswordField">Confirm Password</label>
 	    <div class="col-xs-12">
-	      <input ng-model="registrationForm.confPassword" type="password" class="form-control" placeholder="Confirm Password" id="confPasswordField" name="confPassword" ui-validate=" '$value==password' " ui-validate-watch=" 'password' " ng-minlength="6" required>
+	      <input ng-model="registrationForm.confPassword" type="password" class="form-control" placeholder="Confirm Password" id="confPasswordField" name="confPassword" ui-validate=" '$value==password' " ui-validate-watch=" 'password' " ng-minlength="5" required>
 	      <div ng-messages="frmRegistration.confPassword.$error" ng-if="frmRegistration.confPassword.$touched">
 		        <p ng-message="required">Your password is required.</p>
 		        <p ng-message="minlength">Too short!</p>
