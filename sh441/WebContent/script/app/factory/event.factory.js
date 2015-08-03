@@ -10,59 +10,63 @@
     	function EventFactory($q, $log, $firebaseAuth, $firebaseArray, $firebaseObject, AuthFactory) {
 			var factory = angular.extend(AuthFactory, {});
 
+			factory.findAllFutureEvents = findAllFutureEvents; 
 			factory.createEvent = save;
 			factory.updateEvent = save;
 
-			function save(eventToSave) {
+			function findAllFutureEvents() {
+				return $firebaseArray(factory.EVENT_REF);
+			};
+			
+			function save(eventData) {
 				var deferred = $q.defer();
 				var id = "evt-" + this.createGuid();
-				var user = "UNKNOWN";
+				var username = "UNKNOWN";
 				var timestamp = moment().toISOString();
+				var isCreate = true;
 				
-				this.getAuth().then(function(authData) {
-					return authData;
-				}).then(function(authData) {
-					if(authData) {
-						user = authData.uid;
-						if(eventToSave && eventToSave.$id) {
-							id = eventToSave.$id;
-						}
-						return $firebaseObject(factory.EVENT_REF.child(id)).$loaded();
-					} else {
-						return null;
-					}
+				if(eventData && eventData.$id) {
+					isCreate = false;
+					id = eventData.$id;
+				}
+				
+				this.getUser().then(function(userObj) {
+					username = userObj.username;
+					return $firebaseObject(factory.EVENT_REF.child(id)).$loaded();
+				}).then(function(event){
+					transform(event, eventData, username, timestamp, isCreate);
+					return event.$save();	
+				}, function(error) {
+					deferred.reject(error);
 				}).then(function(event) {
-					if(event) {
-						event.name = eventToSave.name;
-						event.course = eventToSave.course;
-						event.date = eventToSave.date;
-						event.teeTimes = eventToSave.teeTimes;
-						event.createdDate = timestamp;
-						event.modifiedDate = timestamp;
-						event.createdBy = user;
-						event.modifiedBy = user;
-						return event.$save();	
-					} else {
-						return null;
-					}
+					return $firebaseObject(factory.EVENT_REF.child(id)).$loaded();
+				}, function(error) {
+					deferred.reject(error);
 				}).then(function(event) {
-					if(event) {
-						return $firebaseObject(factory.EVENT_REF.child(id)).$loaded();
-					} else {
-						return null;
-					}
-				}).then(function(event) {
-					if(event) {
-						deferred.resolve(event);	
-					} else {
-						deferred.reject("Error creating event");
-					}
-				},function(error) {
+					deferred.resolve(event);	
+				}, function(error) {
 					deferred.reject(error);
 				});
 				
 				return deferred.promise;
 			};
+			
+			function transform(event, eventData, username, timestamp, isCreate){
+				event.name = eventData.name;
+				event.course = eventData.course;
+				event.date = eventData.date;
+				event.teeTimes = eventData.teeTimes;
+				if(isCreate) {
+					event.createdDate = timestamp;
+					event.createdBy = username;
+					event.participants = [];
+				}
+				event.modifiedDate = timestamp;
+				event.modifiedBy = username;
+			};
+			
+			
+			
 			
 			
 			return factory;

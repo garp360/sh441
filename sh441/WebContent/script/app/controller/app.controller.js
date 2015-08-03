@@ -21,7 +21,7 @@
 			
 			$scope.createEvent = function(menuId) {
 		    	$mdSidenav(menuId).toggle();
-		    	$state.go("event-create");
+		    	$state.go("events");
 			};
     	};
 })();

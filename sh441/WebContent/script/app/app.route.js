@@ -36,13 +36,28 @@
 			    		controller: function($scope, $controller, $log, events) {
 			    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
 			    			$scope.events = events;
+			    			
+			    			$scope.eventDate = function(event) {
+			    				var formattedDate = moment(event.date).format("ddd, MMM Do YYYY");
+			    				
+			    				if(event.teeTimes && event.teeTimes.length > 0) {
+			    					formattedDate = formattedDate + " @ " + moment(event.teeTimes[0].utc).format("h:mm A");
+			    				}
+			    				
+			    				return formattedDate;
+			    			};
+
+			    			$scope.participantCount = function(event) {
+			    				var count = 0;
+			    				if(event.participants && event.participants.length > 0) {
+			    					count = participants.length;
+			    				}
+			    				return count;
+			    			};
 			    		},
 			    		resolve : {
-			    			events : function() {
-			    				return [{name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]},
-			    				        {name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]},
-			    				        {name: "Event1", date: "1", participants:["1", "1", "1", "1", "1"]}, {name: "Event2", date: "2", participants:["1", "1", "1", "1", "1"]}, {name: "Event3", date: "3", participants:["1", "1", "1", "1", "1"]}, {name: "Event4", date: "4", participants:["1", "1", "1", "1", "1"]}
-			    				        ];
+			    			events : function(EventFactory) {
+			    				return EventFactory.findAllFutureEvents();
 			    			}
 			    		}
 	        		}
@@ -70,8 +85,8 @@
 	        	    }
 	        	}
 	        })
-	        .state('event-create', {
-	        	url:'/event/new',
+	        .state('events', {
+	        	url:'/event',
 	    		templateUrl: 'view/event/event-form.html',
 	    		controller: 'EventController',
 	        	resolve : {
@@ -111,10 +126,7 @@
 	        			
 	        			return {
 	        	        	name: 'Pidcock Group',
-	        	        	date: {
-	        	        		formatted: today.format('ddd, MMM Do, YYYY'),
-	        	        		utc: today.toISOString()
-	        	        	},
+	        	        	date: today.toISOString(),
 	        	        	course: courses[2],
 	        	        	teeTimes: courses[2].availableTeeTimes.slice(4,8)
         				};

@@ -87,3 +87,8 @@ select {
   top: 0;
   left: 4px;
 }
+
+.form-control[readonly] {
+    background-color: #FFF;
+    opacity: 1;
+}

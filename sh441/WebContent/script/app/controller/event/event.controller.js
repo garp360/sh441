@@ -39,10 +39,7 @@
 				// set date to 12am for the selected day
 				var eventDate = moment(selectedDate).hour(0).minute(0).second(0);
 				
-				$scope.event.date = {
-	        		formatted: eventDate.format('ddd, MMM Do, YYYY'),
-	        		utc: eventDate.toISOString()
-	        	};
+				$scope.event.date = eventDate.toISOString();
 			};
 			
 			function addTeeTime(selectedTeeTime) {

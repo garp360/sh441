@@ -1,7 +1,11 @@
 <div class="list-group">
-  <a ng-repeat="event in events | date" href="#" class="list-group-item">
-  	<span class="badge">{{event.participants.length}} players</span>
+  <a ng-repeat="event in events | orderBy: 'date':false" href="#" class="list-group-item">
+  	<span class="badge">{{participantCount(event)}} players</span>
     {{event.name}}<br />
-    Sunday, Aug 8th
+    {{eventDate(event)}}
+    <div>
+    	<input class="btn btn-xs btn-default" type="button" value="Players">
+		<input class="btn btn-xs btn-default" type="button" value="Delete">
+    </div>
   </a>
 </div>
