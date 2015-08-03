@@ -88,6 +88,10 @@ select {
   left: 4px;
 }
 
+.btn-signup {
+	width: 80px;	
+}
+
 .form-control[readonly] {
     background-color: #FFF;
     opacity: 1;

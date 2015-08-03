@@ -33,28 +33,7 @@
 	        		},
 	        		'events@home' : {
 			    		templateUrl: 'view/partial/member-events.html',
-			    		controller: function($scope, $controller, $log, events) {
-			    			angular.extend(this, $controller('AuthController', {$scope: $scope}));
-			    			$scope.events = events;
-			    			
-			    			$scope.eventDate = function(event) {
-			    				var formattedDate = moment(event.date).format("ddd, MMM Do YYYY");
-			    				
-			    				if(event.teeTimes && event.teeTimes.length > 0) {
-			    					formattedDate = formattedDate + " @ " + moment(event.teeTimes[0].utc).format("h:mm A");
-			    				}
-			    				
-			    				return formattedDate;
-			    			};
-
-			    			$scope.participantCount = function(event) {
-			    				var count = 0;
-			    				if(event.participants && event.participants.length > 0) {
-			    					count = participants.length;
-			    				}
-			    				return count;
-			    			};
-			    		},
+			    		controller: 'SignUpController',
 			    		resolve : {
 			    			events : function(EventFactory) {
 			    				return EventFactory.findAllFutureEvents();

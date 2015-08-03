@@ -13,11 +13,13 @@
 			factory.findAllFutureEvents = findAllFutureEvents; 
 			factory.createEvent = save;
 			factory.updateEvent = save;
+			factory.addPlayer = addPlayer;
+			factory.removePlayer = removePlayer;
 
 			function findAllFutureEvents() {
 				return $firebaseArray(factory.EVENT_REF);
 			};
-			
+
 			function save(eventData) {
 				var deferred = $q.defer();
 				var id = "evt-" + this.createGuid();
@@ -66,8 +68,25 @@
 			};
 			
 			
+			function addPlayer(eventData, userData) {
+				var player = transformUserToPlayer(userData);
+				factory.EVENT_REF.child(eventData.$id).child('participants').child(userData.$id).set(player);
+			};
+
+			function removePlayer(eventData, userData) {
+				factory.EVENT_REF.child(eventData.$id).child('participants').child(userData.$id).remove();
+			};
 			
 			
+			function transformUserToPlayer(userData) {
+				return {
+					username: userData.username,
+					firstName: userData.firstName,
+					lastName: userData.lastName,
+					email: userData.email,
+					abbr: userData.firstName.charAt(0) + ". " + userData.lastName
+				};
+			}
 			
 			return factory;
     	};
