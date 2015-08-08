@@ -13,6 +13,7 @@
 			factory.findAllFutureEvents = findAllFutureEvents; 
 			factory.createEvent = save;
 			factory.updateEvent = save;
+			factory.deleteEvent = deleteEvent;
 			factory.addPlayer = addPlayer;
 			factory.removePlayer = removePlayer;
 
@@ -48,6 +49,23 @@
 					deferred.resolve(event);	
 				}, function(error) {
 					deferred.reject(error);
+				});
+				
+				return deferred.promise;
+			};
+			
+			function deleteEvent(eventData) {
+				var deferred = $q.defer();
+				var id = eventData.$id;
+				
+				$firebaseObject(factory.EVENT_REF.child(id)).$loaded().then(function(event) {
+					return event.$remove();
+				}, function(error) {
+					deferred.reject(error);
+				}).then(function(event) {
+					return $firebaseArray(factory.EVENT_REF);
+				}).then(function(events) {
+					deferred.resolve(events);	
 				});
 				
 				return deferred.promise;

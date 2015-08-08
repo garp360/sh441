@@ -27,13 +27,17 @@ select {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
+.eventDate,
 .teeTimeList {
 	font-size: .9em;
 	font-style: italic;
 	font-weight: normal;
 	display: inline-block;
 	padding-right: 3px;
+}
+
+.teeTimeList {
+	font-size: .8em;
 }
 
 .dropdown-menu {

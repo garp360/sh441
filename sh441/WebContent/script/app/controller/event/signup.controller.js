@@ -9,7 +9,7 @@
     	function SignUpController ($scope, $controller, $log, EventFactory, events, user) {
     		angular.extend(this, $controller('AuthController', {$scope: $scope}));
 			$scope.events = events;
-			$scope.isAdmin = user.role === 'ADMIN';
+			$scope.isAdmin = user.role != null && user.role === 'ADMIN';
 			
 			$scope.eventDate = eventDate;
 			$scope.participantCount = participantCount;
@@ -17,14 +17,11 @@
 
 			$scope.addParticipant = addParticipant;
 			$scope.removeParticipant = removeParticipant;
+			$scope.displayTeeTimes = displayTeeTimeInCommaDelimitedList;
+			$scope.deleteEvent = deleteEvent;
 			
 			function eventDate(event) {
 				var formattedDate = moment(event.date).format("ddd, MMM Do YYYY");
-				
-				if(event.teeTimes && event.teeTimes.length > 0) {
-					formattedDate = formattedDate + " @ " + moment(event.teeTimes[0].utc).format("h:mm A");
-				}
-				
 				return formattedDate;
 			};
 
@@ -40,6 +37,16 @@
 				return count;
 			};
 			
+			function displayTeeTimeInCommaDelimitedList(teeTime, allTeeTimes) {
+				var teeTimeToDisplay = moment(teeTime.utc).format('h:mm a');
+				
+				if(allTeeTimes[allTeeTimes.length-1].order != teeTime.order) {
+					teeTimeToDisplay += ", ";
+				}
+				
+				return teeTimeToDisplay;
+			};
+			
 			function isParticipant(event) {
 				return event.participants && event.participants[user.$id];
 			};
@@ -50,6 +57,12 @@
 
 			function removeParticipant(event) {
 				EventFactory.removePlayer(event, user);				
+			};
+
+			function deleteEvent(event) {
+				EventFactory.deleteEvent(event).then(function(events){
+					$scope.events = events;
+				});				
 			};
 
 		};
