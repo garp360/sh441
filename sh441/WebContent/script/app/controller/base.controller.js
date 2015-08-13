@@ -35,6 +35,10 @@
 				return moment(date).format("dddd, MMMM Do YYYY, h:mm:ss A") + " (UTC " + moment(date).utcOffset() + ")";
 			};
 
+			$scope.formatEventDate = function(date) {
+				return moment(date).format("dddd, MMMM Do YYYY");
+			};
+
 			
 			
     	};	

@@ -64,8 +64,9 @@
 	        	    }
 	        	}
 	        })
-	        .state('events', {
-	        	url:'/event',
+
+	        .state('event-editor', {
+	        	url:'/events/new',
 	    		templateUrl: 'view/event/event-form.html',
 	    		controller: 'EventController',
 	        	resolve : {
@@ -110,6 +111,24 @@
 	        	        	teeTimes: courses[2].availableTeeTimes.slice(4,8)
         				};
         			},
+	        	}
+	    	})
+	    	.state('event-detail', {
+	        	url:'/events/event/:id',
+	    		templateUrl: 'view/event/event-detail.html',
+	    		controller: function($scope, $controller, $log, $state, event) {
+	    			$scope.event = event;
+	    		},
+	        	resolve : {
+	        		eventId : function($stateParams) {
+	        			console.log("$stateParams.id:[", $stateParams.id + "]");
+	        			return $stateParams.id;
+	        		},
+	    			event : function(EventFactory, eventId) {
+	    				console.log("eventId:[", eventId	 + "]");
+	    				console.log("EventFactory:[", EventFactory + "]");
+	    				return EventFactory.findEventById(eventId);
+	    			}
 	        	}
 	    	});
 	       

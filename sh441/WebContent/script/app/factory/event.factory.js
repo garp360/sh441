@@ -11,6 +11,7 @@
 			var factory = angular.extend(AuthFactory, {});
 
 			factory.findAllFutureEvents = findAllFutureEvents; 
+			factory.findEventById = findEventById;
 			factory.createEvent = save;
 			factory.updateEvent = save;
 			factory.deleteEvent = deleteEvent;
@@ -19,6 +20,11 @@
 
 			function findAllFutureEvents() {
 				return $firebaseArray(factory.EVENT_REF);
+			};
+
+			function findEventById(id) {
+				console.log("EventFactory.findEventById $stateParams.id:[" + id + "]");
+				return $firebaseObject(factory.EVENT_REF.child(id)).$loaded();
 			};
 
 			function save(eventData) {
