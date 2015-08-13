@@ -1,0 +1,25 @@
+<div class="well">
+	<form name="frmEvent" class="form-horizontal">
+		<div class="form-group">
+	  		<label>{{event.$id}}</label>
+		</div>
+		<div class="form-group">
+	  		<label>{{event.name}}</label>
+		</div>
+ 		<div class="form-group">
+	  		<label>{{event.course.name}}</label>
+		</div>
+		<div class="teeTimeList" ng-repeat="teeTime in event.teeTimes | orderBy:'order'">
+	    	<span>{{teeTime.formatted}}</span>
+	    </div>
+		<div  ng-repeat="player in event.participants | orderBy:'lastName'">
+	    	<div>{{formatNameLF(player)}}</div>
+	    </div>
+	    <div class="form-group">
+		    <div class="col-xs-12">
+		      <a class="btn btn-default form-control" ui-sref="home" role="button">Cancel</a>
+		    </div>
+	  </div>
+	</form>
+</div>
+

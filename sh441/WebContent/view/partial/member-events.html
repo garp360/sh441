@@ -1,7 +1,7 @@
 <div class="list-group">
-	<a ng-repeat="event in events | orderBy: 'date':false" href="#" class="list-group-item">
+	<div ng-repeat="event in events | orderBy: 'date':false" href="#" class="list-group-item">
 		<span class="badge btn-signup">{{participantCount(event)}} players</span>
-		{{event.name}}<br />
+		<a ui-sref="event-detail({id: event.$id})">{{event.name}}</a><br />
 		<span class="eventDate">{{eventDate(event)}}</span><input ng-show="!isParticipant(event)" ng-click="addParticipant(event)" class="btn btn-xs btn-default btn-signup pull-right" type="button" value="Sign Up"><input ng-show="isParticipant(event)" ng-click="removeParticipant(event)" class="btn btn-xs btn-default btn-signup pull-right" type="button" value="Drop Out">
 		<br /><div class="teeTimeList" ng-repeat="teeTime in event.teeTimes | orderBy:'order'">
 			    	<span>{{displayTeeTimes(teeTime, event.teeTimes)}}</span>
@@ -10,5 +10,5 @@
 			<input ng-show="isAdmin" class="btn btn-xs btn-default" type="button" value="Players">
 			<input ng-show="isAdmin" class="btn btn-xs btn-default" type="button" value="Delete" ng-click="deleteEvent(event)">
 		</div>
-	</a>
+	</div>
 </div>
